@@ -68,9 +68,6 @@ app.frame("/", (c) => {
 
 app.transaction("/mint", async (c) => {
   const { address } = c;
-  console.log("SWEETS address", address);
-  // Contract transaction response.
-
   const sweetman = address as Address;
   const collection = "0x7D9aD986e8369f7909A363798a0de4025D1E784d" as Address;
   const minter = "0x777777722D078c97c6ad07d9f36801e653E356Ae" as Address;
@@ -87,9 +84,6 @@ app.transaction("/mint", async (c) => {
   ] as any;
   const functionName = "mint";
   const value = parseEther("0.000111");
-  console.log("SWEETS functionName", functionName);
-  console.log("SWEETS args", args);
-  console.log("SWEETS value", value);
 
   return c.contract({
     abi: zoraTimedSaleStrategyABI,
