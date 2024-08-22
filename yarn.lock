@@ -712,6 +712,19 @@
     json-schema-to-ts "1.6.4"
     ts-morph "12.0.0"
 
+"@zoralabs/protocol-deployments@^0.3.1":
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/@zoralabs/protocol-deployments/-/protocol-deployments-0.3.1.tgz#1e43fab9496b3b89736fdb22438f93cc4eabbadc"
+  integrity sha512-yHoWl11MA+suFMMmiuI2MNzdQrmDFnq3WDke9ctm+8Ibh+JZ5TPb8Kqu2x5yb8+QVsliq7i+vYc/zqVyOTledw==
+
+"@zoralabs/protocol-sdk@^0.9.4":
+  version "0.9.4"
+  resolved "https://registry.yarnpkg.com/@zoralabs/protocol-sdk/-/protocol-sdk-0.9.4.tgz#443eb13a8f1528b504ae11083e32c0565ecbdf83"
+  integrity sha512-c9Hcdq5Jka3yWSm8lBf8BJQq//Nsfkae48XlTbSr6Dw+QAF1rLeCwy6WBYF6s2jewgB9rdYmnPASQAUx5qSEmw==
+  dependencies:
+    "@zoralabs/protocol-deployments" "^0.3.1"
+    abitype "^1.0.2"
+
 abbrev@1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/abbrev/-/abbrev-1.1.1.tgz#f8f2c887ad10bf67f634f005b6987fed3179aac8"
@@ -721,6 +734,11 @@ abitype@1.0.5:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/abitype/-/abitype-1.0.5.tgz#29d0daa3eea867ca90f7e4123144c1d1270774b6"
   integrity sha512-YzDhti7cjlfaBhHutMaboYB21Ha3rXR9QTkNJFzYC4kC8YclaiwPBBBJY8ejFdu2wnJeZCVZSMlQJ7fi8S6hsw==
+
+abitype@^1.0.2:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/abitype/-/abitype-1.0.6.tgz#76410903e1d88e34f1362746e2d407513c38565b"
+  integrity sha512-MMSqYh4+C/aVqI2RQaWqbvI4Kxo5cQV40WQ4QFtDnNzCkqChm8MuENhElmynZlO0qUy/ObkEUaXtKqYnx1Kp3A==
 
 acorn-walk@^8.1.1:
   version "8.3.3"
@@ -2498,6 +2516,21 @@ vercel@^32.4.1:
     "@vercel/ruby" "2.0.4"
     "@vercel/static-build" "2.0.14"
     chokidar "3.3.1"
+
+viem@^2.20.0:
+  version "2.20.0"
+  resolved "https://registry.yarnpkg.com/viem/-/viem-2.20.0.tgz#abff4c2cf733bcc20978e662ea17db117a2881ef"
+  integrity sha512-cM4vs81HnSNbfceI1MLkx4pCVzbVjl9xiNSv5SCutYjUyFFOVSPDlEyhpg2iHinxx1NM4Qne3END5eLT8rvUdg==
+  dependencies:
+    "@adraffy/ens-normalize" "1.10.0"
+    "@noble/curves" "1.4.0"
+    "@noble/hashes" "1.4.0"
+    "@scure/bip32" "1.4.0"
+    "@scure/bip39" "1.3.0"
+    abitype "1.0.5"
+    isows "1.0.4"
+    webauthn-p256 "0.0.5"
+    ws "8.17.1"
 
 viem@^2.7.10:
   version "2.19.9"
