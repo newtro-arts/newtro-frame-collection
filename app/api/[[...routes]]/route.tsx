@@ -10,13 +10,8 @@ import { Address } from "viem";
 const app = new Frog({
   assetsPath: "/",
   basePath: "/api",
-  // Supply a Hub to enable frame verification.
-  // hub: neynar({ apiKey: 'NEYNAR_FROG_FM' })
   title: "Frog Frame",
 });
-
-// Uncomment to use Edge Runtime
-// export const runtime = 'edge'
 
 app.frame("/", (c) => {
   const { buttonValue, inputText, status } = c;
@@ -68,28 +63,29 @@ app.frame("/", (c) => {
 
 app.transaction("/mint", async (c) => {
   const { address } = c;
-  const sweetman = address as Address;
-  const collection = "0x7D9aD986e8369f7909A363798a0de4025D1E784d" as Address;
   const minter = "0x777777722D078c97c6ad07d9f36801e653E356Ae" as Address;
-  const tokenId = 11;
   const quantity = 1;
-
+  // change this to your zora collection on base
+  const collection = "0x7D9aD986e8369f7909A363798a0de4025D1E784d" as Address;
+  // change this to your tokenId
+  const tokenId = 11;
+  // change this to your comment
+  const comment = "ALEPH";
   const args = [
-    sweetman,
+    address,
     quantity,
     collection,
     tokenId,
-    sweetman,
-    "ALEPH",
+    address,
+    comment,
   ] as any;
   const functionName = "mint";
   const value = parseEther("0.000111");
-
   return c.contract({
     abi: zoraTimedSaleStrategyABI,
     chainId: "eip155:8453",
-    functionName: "mint",
-    args: args,
+    functionName,
+    args,
     to: minter,
     value,
   });
@@ -110,17 +106,3 @@ devtools(app, { serveStatic });
 
 export const GET = handle(app);
 export const POST = handle(app);
-
-// NOTE: That if you are using the devtools and enable Edge Runtime, you will need to copy the devtools
-// static assets to the public folder. You can do this by adding a script to your package.json:
-// ```json
-// {
-//   scripts: {
-//     "copy-static": "cp -r ./node_modules/frog/_lib/ui/.frog ./public/.frog"
-//   }
-// }
-// ```
-// Next, you'll want to set up the devtools to use the correct assets path:
-// ```ts
-// devtools(app, { assetsPath: '/.frog' })
-// ```
