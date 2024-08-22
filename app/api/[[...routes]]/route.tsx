@@ -77,7 +77,14 @@ app.transaction("/mint", async (c) => {
   const tokenId = 11;
   const quantity = 1;
 
-  const args = [sweetman, quantity, collection, tokenId, sweetman, "ALEPH"];
+  const args = [
+    sweetman,
+    quantity,
+    collection,
+    tokenId,
+    sweetman,
+    "ALEPH",
+  ] as any;
   const functionName = "mint";
   const value = parseEther("0.000111");
   console.log("SWEETS functionName", functionName);
