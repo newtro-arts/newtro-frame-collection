@@ -13,9 +13,10 @@ const app = new Frog({
   title: "Frog Frame",
 });
 
+const tokenCount = 11;
+
 app.frame("/", (c) => {
-  const { buttonValue, inputText, status } = c;
-  const fruit = inputText || buttonValue;
+  const { status } = c;
   return c.res({
     image: (
       <div
@@ -47,16 +48,73 @@ app.frame("/", (c) => {
             whiteSpace: "pre-wrap",
           }}
         >
-          {status === "response"
-            ? `Nice choice.${fruit ? ` ${fruit.toUpperCase()}!!` : ""}`
-            : "Welcome!"}
+          BIENVENIDOS A NEWTRO
         </div>
       </div>
     ),
     action: "/finish",
     intents: [
+      <Button action="/explore" value="1">
+        Explore collection
+      </Button>,
+      <Button.Transaction target="/mint">Mint all</Button.Transaction>,
+      <Button.Link href="https://newtro.xyz">newtro.xyz</Button.Link>,
+    ],
+  });
+});
+
+app.frame("/explore", (c) => {
+  const { buttonValue, status } = c;
+  const numberButtonValue = parseInt(buttonValue || "1", 10);
+  const prevToken = numberButtonValue > 1 ? numberButtonValue - 1 : tokenCount;
+  const nextToken =
+    numberButtonValue === tokenCount ? 1 : numberButtonValue + 1;
+  return c.res({
+    image: (
+      <div
+        style={{
+          alignItems: "center",
+          background:
+            status === "response"
+              ? "linear-gradient(to right, #432889, #17101F)"
+              : "black",
+          backgroundSize: "100% 100%",
+          display: "flex",
+          flexDirection: "column",
+          flexWrap: "nowrap",
+          height: "100%",
+          justifyContent: "center",
+          textAlign: "center",
+          width: "100%",
+        }}
+      >
+        <div
+          style={{
+            color: "white",
+            display: "flex",
+            fontSize: 60,
+            fontStyle: "normal",
+            letterSpacing: "-0.025em",
+            lineHeight: 1.4,
+            marginTop: 30,
+            padding: "0 120px",
+            whiteSpace: "pre-wrap",
+          }}
+        >
+          PAGINA DE EXPLORE - token #{buttonValue}
+        </div>
+      </div>
+    ),
+    action: "/finish",
+    intents: [
+      <Button action="/explore" value={prevToken.toString()}>
+        previous
+      </Button>,
+      <Button action="/explore" value={nextToken.toString()}>
+        next
+      </Button>,
       <Button.Transaction target="/mint">Mint</Button.Transaction>,
-      status === "response" && <Button.Reset>Reset</Button.Reset>,
+      <Button.Link href="https://newtro.xyz">newtro.xyz</Button.Link>,
     ],
   });
 });
