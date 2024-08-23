@@ -69,7 +69,6 @@ app.frame("/explore", (c) => {
   const prevToken = numberButtonValue > 1 ? numberButtonValue - 1 : tokenCount;
   const nextToken =
     numberButtonValue === tokenCount ? 1 : numberButtonValue + 1;
-  console.log("SWEETS BUTTON VALUE", buttonValue);
   return c.res({
     image: (
       <div
