@@ -5,106 +5,59 @@ import { devtools } from "frog/dev";
 import { handle } from "frog/next";
 import { serveStatic } from "frog/serve-static";
 import { zoraTimedSaleStrategyABI } from "@zoralabs/protocol-deployments";
-import { Address } from "viem";
+import { Address, createPublicClient, http } from "viem";
+import { arbitrum } from "viem/chains";
+import { createCollectorClient } from "@zoralabs/protocol-sdk";
+import getTokenMetdata from "@/lib/ipfs/getTokenMetadata";
+import getIpfsLink from "@/lib/ipfs/getIpfsLink";
 
 const app = new Frog({
   assetsPath: "/",
   basePath: "/api",
-  title: "Frog Frame",
+  title: "Newtro Arts",
 });
 
-const tokenCount = 11;
+const collection = "0x765cee6ff107f2b8c20c71ac34ff38776fd39d3e" as Address;
+const collectionPageUrl = `https://newtro-v2-git-test-newtros-projects.vercel.app/collect/arb:${collection}`;
+const minter = "0x777777722D078c97c6ad07d9f36801e653E356Ae" as Address;
 
 app.frame("/", (c) => {
-  const { status } = c;
   return c.res({
-    image: (
-      <div
-        style={{
-          alignItems: "center",
-          background:
-            status === "response"
-              ? "linear-gradient(to right, #432889, #17101F)"
-              : "black",
-          backgroundSize: "100% 100%",
-          display: "flex",
-          flexDirection: "column",
-          flexWrap: "nowrap",
-          height: "100%",
-          justifyContent: "center",
-          textAlign: "center",
-          width: "100%",
-        }}
-      >
-        <div
-          style={{
-            color: "white",
-            fontSize: 60,
-            fontStyle: "normal",
-            letterSpacing: "-0.025em",
-            lineHeight: 1.4,
-            marginTop: 30,
-            padding: "0 120px",
-            whiteSpace: "pre-wrap",
-          }}
-        >
-          BIENVENIDOS A NEWTRO
-        </div>
-      </div>
-    ),
+    image: getIpfsLink("ipfs://QmXZ5weAZsNBbvno38KXY4HNu74AfSQTXP4dFybw18gJ1J"),
     action: "/finish",
     intents: [
       <Button action="/explore" value="1">
         Explore collection
       </Button>,
       <Button.Transaction target="/mint">Mint all</Button.Transaction>,
-      <Button.Link href="https://newtro.xyz">newtro.xyz</Button.Link>,
+      <Button.Link href={`${collectionPageUrl}/1`}>newtro.xyz</Button.Link>,
     ],
   });
 });
 
-app.frame("/explore", (c) => {
-  const { buttonValue, status } = c;
+app.frame("/explore", async (c) => {
+  const { buttonValue } = c;
   const numberButtonValue = parseInt(buttonValue || "1", 10);
+  const publicClient = createPublicClient({
+    chain: arbitrum,
+    transport: http(),
+  });
+  const collectorClient = createCollectorClient({
+    chainId: arbitrum.id,
+    publicClient,
+  });
+  const { tokens } = await collectorClient.getTokensOfContract({
+    tokenContract: collection,
+  });
+  const tokenCount = tokens.length;
   const prevToken = numberButtonValue > 1 ? numberButtonValue - 1 : tokenCount;
   const nextToken =
     numberButtonValue === tokenCount ? 1 : numberButtonValue + 1;
+  const selectedToken = tokens[numberButtonValue - 1];
+  const tokenUri = selectedToken.token.tokenURI;
+  const metadata = await getTokenMetdata(tokenUri);
   return c.res({
-    image: (
-      <div
-        style={{
-          alignItems: "center",
-          background:
-            status === "response"
-              ? "linear-gradient(to right, #432889, #17101F)"
-              : "black",
-          backgroundSize: "100% 100%",
-          display: "flex",
-          flexDirection: "column",
-          flexWrap: "nowrap",
-          height: "100%",
-          justifyContent: "center",
-          textAlign: "center",
-          width: "100%",
-        }}
-      >
-        <div
-          style={{
-            color: "white",
-            display: "flex",
-            fontSize: 60,
-            fontStyle: "normal",
-            letterSpacing: "-0.025em",
-            lineHeight: 1.4,
-            marginTop: 30,
-            padding: "0 120px",
-            whiteSpace: "pre-wrap",
-          }}
-        >
-          PAGINA DE EXPLORE - token #{buttonValue}
-        </div>
-      </div>
-    ),
+    image: getIpfsLink(metadata.image),
     action: "/finish",
     intents: [
       <Button action="/explore" value={prevToken.toString()}>
@@ -113,22 +66,23 @@ app.frame("/explore", (c) => {
       <Button action="/explore" value={nextToken.toString()}>
         next
       </Button>,
-      <Button.Transaction target="/mint">Mint</Button.Transaction>,
-      <Button.Link href="https://newtro.xyz">newtro.xyz</Button.Link>,
+      <Button.Transaction target={`/mint?tokenId=${numberButtonValue}`}>
+        Mint
+      </Button.Transaction>,
+      <Button.Link href={`${collectionPageUrl}/${numberButtonValue}`}>
+        newtro.xyz
+      </Button.Link>,
     ],
   });
 });
 
 app.transaction("/mint", async (c) => {
-  const { address } = c;
-  const minter = "0x777777722D078c97c6ad07d9f36801e653E356Ae" as Address;
+  const { address, frameData } = c;
+  const url = frameData?.url;
+  const tokenId = url?.split("=")[1] || 1;
   const quantity = 1;
-  // change this to your zora collection on base
-  const collection = "0x7D9aD986e8369f7909A363798a0de4025D1E784d" as Address;
-  // change this to your tokenId
-  const tokenId = 11;
   // change this to your comment
-  const comment = "ALEPH";
+  const comment = "ALEPH HACKATHON";
   const args = [
     address,
     quantity,
@@ -141,7 +95,7 @@ app.transaction("/mint", async (c) => {
   const value = parseEther("0.000111");
   return c.contract({
     abi: zoraTimedSaleStrategyABI,
-    chainId: "eip155:8453",
+    chainId: `eip155:${arbitrum.id}`,
     functionName,
     args,
     to: minter,
