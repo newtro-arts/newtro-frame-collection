@@ -16,42 +16,9 @@ const app = new Frog({
 const tokenCount = 11;
 
 app.frame("/", (c) => {
-  const { status } = c;
   return c.res({
-    image: (
-      <div
-        style={{
-          alignItems: "center",
-          background:
-            status === "response"
-              ? "linear-gradient(to right, #432889, #17101F)"
-              : "black",
-          backgroundSize: "100% 100%",
-          display: "flex",
-          flexDirection: "column",
-          flexWrap: "nowrap",
-          height: "100%",
-          justifyContent: "center",
-          textAlign: "center",
-          width: "100%",
-        }}
-      >
-        <div
-          style={{
-            color: "white",
-            fontSize: 60,
-            fontStyle: "normal",
-            letterSpacing: "-0.025em",
-            lineHeight: 1.4,
-            marginTop: 30,
-            padding: "0 120px",
-            whiteSpace: "pre-wrap",
-          }}
-        >
-          BIENVENIDOS A NEWTRO
-        </div>
-      </div>
-    ),
+    image:
+      "https://ipfs.decentralized-content.com/ipfs/QmXZ5weAZsNBbvno38KXY4HNu74AfSQTXP4dFybw18gJ1J",
     action: "/finish",
     intents: [
       <Button action="/explore" value="1">
