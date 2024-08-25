@@ -20,6 +20,7 @@ const app = new Frog({
 const collection = "0x765cee6ff107f2b8c20c71ac34ff38776fd39d3e" as Address;
 const collectionPageUrl = `https://newtro-v2-git-test-newtros-projects.vercel.app/collect/arb:${collection}`;
 const minter = "0x777777722D078c97c6ad07d9f36801e653E356Ae" as Address;
+const NEWTRO_ARTS_ADDRESS = "0x33912a0d6bEFf5Fb8e5B70688CE858D5e7E8104E";
 
 app.frame("/", (c) => {
   return c.res({
@@ -81,14 +82,13 @@ app.transaction("/mint", async (c) => {
   const url = frameData?.url;
   const tokenId = url?.split("=")[1] || 1;
   const quantity = 1;
-  // change this to your comment
-  const comment = "ALEPH HACKATHON";
+  const comment = "To the moon with Newtro!";
   const args = [
     address,
     quantity,
     collection,
     tokenId,
-    address,
+    NEWTRO_ARTS_ADDRESS,
     comment,
   ] as any;
   const functionName = "mint";
