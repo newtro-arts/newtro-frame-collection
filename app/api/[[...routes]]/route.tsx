@@ -6,6 +6,7 @@ import { handle } from "frog/next";
 import { serveStatic } from "frog/serve-static";
 import { zoraTimedSaleStrategyABI } from "@zoralabs/protocol-deployments";
 import { Address } from "viem";
+import { arbitrum } from "viem/chains";
 
 const app = new Frog({
   assetsPath: "/",
@@ -80,22 +81,25 @@ app.frame("/explore", (c) => {
       <Button action="/explore" value={nextToken.toString()}>
         next
       </Button>,
-      <Button.Transaction target="/mint">Mint</Button.Transaction>,
+      <Button.Transaction target={`/mint?tokenId=${numberButtonValue}`}>
+        Mint
+      </Button.Transaction>,
       <Button.Link href="https://newtro.xyz">newtro.xyz</Button.Link>,
     ],
   });
 });
 
 app.transaction("/mint", async (c) => {
-  const { address } = c;
+  const { address, frameData } = c;
+  const url = frameData?.url;
+  const tokenId = url?.split("=")[1];
+  console.log("SWEETS tokenIdNew", tokenId);
   const minter = "0x777777722D078c97c6ad07d9f36801e653E356Ae" as Address;
   const quantity = 1;
   // change this to your zora collection on base
-  const collection = "0x7D9aD986e8369f7909A363798a0de4025D1E784d" as Address;
-  // change this to your tokenId
-  const tokenId = 11;
+  const collection = "0x765cee6ff107f2b8c20c71ac34ff38776fd39d3e" as Address;
   // change this to your comment
-  const comment = "ALEPH";
+  const comment = "ALEPH HACKATHON";
   const args = [
     address,
     quantity,
@@ -108,7 +112,7 @@ app.transaction("/mint", async (c) => {
   const value = parseEther("0.000111");
   return c.contract({
     abi: zoraTimedSaleStrategyABI,
-    chainId: "eip155:8453",
+    chainId: `eip155:${arbitrum.id}`,
     functionName,
     args,
     to: minter,
