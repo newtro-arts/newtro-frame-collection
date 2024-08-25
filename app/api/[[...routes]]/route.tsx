@@ -23,7 +23,7 @@ const minter = "0x777777722D078c97c6ad07d9f36801e653E356Ae" as Address;
 
 app.frame("/", (c) => {
   return c.res({
-    image: getIpfsLink("ipfs://QmYQZSi2PsF8hjf7xFNPq6dDKv8DbrCobg3tixsZBaFZj8"),
+    image: getIpfsLink("ipfs://QmYqJ2sF7UrziJLWViZ7y9kpkvwpC3sjkodhtGDCyF7fGr"),
     action: "/finish",
     intents: [
       <Button action="/explore" value="1">
